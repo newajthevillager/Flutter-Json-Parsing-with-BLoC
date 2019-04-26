@@ -161,7 +161,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     print("M called");
     _newsListBloc = NewsListBloc(articleRepository: widget.articleRepository);
-    _newsListBloc.dispatch(AvailableNetworkEvent());
+    _newsListBloc.onNetworkAvailable(AvailableNetworkEvent());
   }
 
   @override

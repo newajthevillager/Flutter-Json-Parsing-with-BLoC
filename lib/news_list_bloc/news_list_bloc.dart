@@ -35,4 +35,12 @@ class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
     }
   }
 
+  void onNetworkAvailable(NewsListEvent event) {
+    dispatch(event);
+  }
+
+  void onNoNetwork() {
+
+  }
+
 }

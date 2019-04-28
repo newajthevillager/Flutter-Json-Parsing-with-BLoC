@@ -1,12 +1,10 @@
+import 'package:boring_flutter_app/model/article_model.dart';
 import 'package:flutter/material.dart';
 
 class ContentScreen extends StatelessWidget {
-  String headline;
-  String imageUrl;
-  String time;
-  String content;
+  Article article;
 
-  ContentScreen({this.headline, this.imageUrl, this.time, this.content});
+  ContentScreen({this.article});
 
   @override
   Widget build(BuildContext context) {
@@ -17,21 +15,21 @@ class ContentScreen extends StatelessWidget {
       body: ListView(
         padding: EdgeInsets.all(5.0),
         children: <Widget>[
-          Image.network(imageUrl),
+          Image.network(article.urlToImage),
           Container(
             alignment: Alignment.center,
             padding: EdgeInsets.all(10.0),
             child: Text(
-              headline,
+              article.title,
               style: TextStyle(fontSize: 20.0),
             ),
           ),
           Container(
             alignment: Alignment.topRight,
             margin: EdgeInsets.all(5.0),
-            child: Text(time),
+            child: Text(article.publishedAt),
           ),
-          Text(content),
+          Text(article.content),
         ],
       ),
     );

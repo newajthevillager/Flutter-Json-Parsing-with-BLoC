@@ -29,6 +29,14 @@ class _HomePageState extends State<HomePage> {
 
   NewsListBloc _newsListBloc;
 
+  @override
+  void initState() {
+    super.initState();
+    print("M called");
+    _newsListBloc = NewsListBloc(articleRepository: widget.articleRepository);
+    _newsListBloc.onNetworkAvailable(AvailableNetworkEvent());
+  }
+
   // constructor will be called before initState()
   _HomePageState() {
     print("C called");
@@ -89,17 +97,22 @@ class _HomePageState extends State<HomePage> {
             itemBuilder: (ctx, pos) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  leading: ClipOval(
-                    child: Image.network(
-                      state.articles[pos].urlToImage,
-                      fit: BoxFit.cover,
-                      height: 70.0,
-                      width: 70.0,
+                child: InkWell(
+                  child: ListTile(
+                    leading: ClipOval(
+                      child: Image.network(
+                        state.articles[pos].urlToImage,
+                        fit: BoxFit.cover,
+                        height: 70.0,
+                        width: 70.0,
+                      ),
                     ),
+                    title: Text(state.articles[pos].title),
+                    subtitle: Text(state.articles[pos].publishedAt),
                   ),
-                  title: Text(state.articles[pos].title),
-                  subtitle: Text(state.articles[pos].publishedAt),
+                  onTap: () {
+                    navigateToContentScreen(context, state.articles[pos]);
+                  },
                 ),
               );
             },
@@ -109,7 +122,21 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // using FutureBuilder without BLoC pattern
+  @override
+  void dispose() {
+    _newsListBloc.dispose();
+    super.dispose();
+  }
+
+}
+
+void navigateToContentScreen(BuildContext context, Article article) {
+  Navigator.push(context, MaterialPageRoute(builder: (context) {
+    return ContentScreen(article: article,);
+  }));
+}
+
+// using FutureBuilder without BLoC pattern
 //   List<Article> list = [];
 //  Widget loadUI(BuildContext ctx) {
 //    _articleRepository.getCricNews().then((articles) {
@@ -155,30 +182,3 @@ class _HomePageState extends State<HomePage> {
 //      },
 //    );
 //  }
-
-  @override
-  void initState() {
-    super.initState();
-    print("M called");
-    _newsListBloc = NewsListBloc(articleRepository: widget.articleRepository);
-    _newsListBloc.onNetworkAvailable(AvailableNetworkEvent());
-  }
-
-  @override
-  void dispose() {
-    _newsListBloc.dispose();
-    super.dispose();
-  }
-}
-
-void navigateToContentScreen(BuildContext context, String headline,
-    String imageUrl, String time, String content) {
-  Navigator.push(context, MaterialPageRoute(builder: (context) {
-    return ContentScreen(
-      headline: headline,
-      imageUrl: imageUrl,
-      content: content,
-      time: time,
-    );
-  }));
-}

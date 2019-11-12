@@ -1,6 +1,7 @@
-import 'package:boring_flutter_app/model/article_model.dart';
+import 'package:boring_flutter_app/data/model/article_model.dart';
+import 'package:equatable/equatable.dart';
 
-class ApiResult {
+class ApiResult extends Equatable {
   String status;
   int totalResults;
   List<Article> articles;
@@ -27,5 +28,11 @@ class ApiResult {
     }
     return data;
   }
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [
+    status, totalResults, articles
+  ];
 }
 

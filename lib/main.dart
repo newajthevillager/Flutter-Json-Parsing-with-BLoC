@@ -1,139 +1,27 @@
-import 'package:boring_flutter_app/model/article_model.dart';
-import 'package:boring_flutter_app/news_list_bloc/news_list_bloc.dart';
-import 'package:boring_flutter_app/news_list_bloc/news_list_event.dart';
-import 'package:boring_flutter_app/news_list_bloc/news_list_state.dart';
-import 'package:boring_flutter_app/services/article_api_provider.dart';
-import 'package:boring_flutter_app/services/article_repository.dart';
-import 'package:boring_flutter_app/ui/about_screen.dart';
-import 'package:boring_flutter_app/ui/content_screen.dart';
+import 'package:boring_flutter_app/bloc/article/article_bloc.dart';
+import 'package:boring_flutter_app/bloc/article/article_event.dart';
+import 'package:boring_flutter_app/bloc/article/article_state.dart';
+import 'package:boring_flutter_app/data/model/article_model.dart';
+import 'package:boring_flutter_app/data/repository/article_repository.dart';
+import 'package:boring_flutter_app/ui/pages/about_page.dart';
+import 'package:boring_flutter_app/ui/pages/article_detail_page.dart';
+import 'package:boring_flutter_app/ui/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() {
-  ArticleRepository articleRepository = ArticleRepository();
-  runApp(HomePage(
-    articleRepository: articleRepository,
-  ));
-}
+void main() => runApp(MyApp());
 
-class HomePage extends StatefulWidget {
-  final ArticleRepository articleRepository;
-
-  HomePage({this.articleRepository});
-
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-
-  NewsListBloc _newsListBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    print("M called");
-    _newsListBloc = NewsListBloc(articleRepository: widget.articleRepository);
-    _newsListBloc.onNetworkAvailable(AvailableNetworkEvent());
-  }
-
-  // constructor will be called before initState()
-  _HomePageState() {
-    print("C called");
-  }
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Builder(
-        builder: (context) {
-          return Material(
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text("Cricket"),
-                actions: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.info),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) {
-                          return AboutScreen();
-                        }),
-                      );
-                    },
-                  )
-                ],
-              ),
-              body: Container(
-                child: buildUI(context),
-              ),
-            ),
-          );
-        },
+      title: 'Weather App',
+      home: BlocProvider(
+        builder: (context) => ArticleBloc(repository: ArticleRepositoryImpl()),
+        child: HomePage(),
       ),
     );
   }
-
-  Widget buildUI(BuildContext context) {
-    return BlocBuilder(
-      bloc: _newsListBloc,
-      builder: (context, state) {
-        if (state is NewsListFetchingState) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (state is NewsListFethingErrorState) {
-          return Center(
-            child: Text("Error Found"),
-          );
-        } else if (state is NoNewsListState) {
-          return Center(
-            child: Text("No News"),
-          );
-        } else if (state is NewsListFetchedState) {
-          return ListView.builder(
-            itemCount: state.articles.length,
-            itemBuilder: (ctx, pos) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: InkWell(
-                  child: ListTile(
-                    leading: ClipOval(
-                      child: Image.network(
-                        state.articles[pos].urlToImage,
-                        fit: BoxFit.cover,
-                        height: 70.0,
-                        width: 70.0,
-                      ),
-                    ),
-                    title: Text(state.articles[pos].title),
-                    subtitle: Text(state.articles[pos].publishedAt),
-                  ),
-                  onTap: () {
-                    navigateToContentScreen(context, state.articles[pos]);
-                  },
-                ),
-              );
-            },
-          );
-        }
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    _newsListBloc.dispose();
-    super.dispose();
-  }
-
-}
-
-void navigateToContentScreen(BuildContext context, Article article) {
-  Navigator.push(context, MaterialPageRoute(builder: (context) {
-    return ContentScreen(article: article,);
-  }));
 }
 
 // using FutureBuilder without BLoC pattern

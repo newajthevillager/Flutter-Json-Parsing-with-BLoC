@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:boring_flutter_app/bloc/article/article_event.dart';
 import 'package:boring_flutter_app/bloc/article/article_state.dart';
-import 'package:boring_flutter_app/data/model/article_model.dart';
+import 'package:boring_flutter_app/data/model/api_result_model.dart';
 import 'package:boring_flutter_app/data/repository/article_repository.dart';
 import 'package:meta/meta.dart';
 
@@ -20,7 +20,7 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
     if (event is FetchArticlesEvent) {
       yield ArticleLoadingState();
       try {
-        List<Article> articles = await repository.fetchArticles();
+        List<Articles> articles = await repository.getArticles();
         yield ArticleLoadedState(articles: articles);
       } catch (e) {
         yield ArticleErrorState(message: e.toString());

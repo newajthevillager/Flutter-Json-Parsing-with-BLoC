@@ -1,8 +1,8 @@
-import 'package:boring_flutter_app/data/model/article_model.dart';
+import 'package:boring_flutter_app/data/model/api_result_model.dart';
 import 'package:flutter/material.dart';
 
 class ArticleDetailPage extends StatelessWidget {
-  Article article;
+  Articles article;
 
   ArticleDetailPage({this.article});
 

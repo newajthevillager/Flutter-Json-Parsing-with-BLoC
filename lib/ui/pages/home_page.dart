@@ -1,7 +1,7 @@
 import 'package:boring_flutter_app/bloc/article/article_bloc.dart';
 import 'package:boring_flutter_app/bloc/article/article_event.dart';
 import 'package:boring_flutter_app/bloc/article/article_state.dart';
-import 'package:boring_flutter_app/data/model/article_model.dart';
+import 'package:boring_flutter_app/data/model/api_result_model.dart';
 import 'package:boring_flutter_app/ui/pages/about_page.dart';
 import 'package:boring_flutter_app/ui/pages/article_detail_page.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +58,6 @@ class _HomePageState extends State<HomePage> {
                     }
                   },
                   child: BlocBuilder<ArticleBloc, ArticleState>(
-                    // todo if bloc property is not mentioned
                     builder: (context, state) {
                       if (state is ArticleInitialState) {
                         return buildLoading();
@@ -98,7 +97,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget buildArticleList(List<Article> articles) {
+  Widget buildArticleList(List<Articles> articles) {
     return ListView.builder(
       itemCount: articles.length,
       itemBuilder: (ctx, pos) {
@@ -129,7 +128,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void navigateToArticleDetailPage(BuildContext context, Article article) {
+  void navigateToArticleDetailPage(BuildContext context, Articles article) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return ArticleDetailPage(
         article: article,

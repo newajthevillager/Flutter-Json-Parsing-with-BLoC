@@ -1,4 +1,4 @@
-import 'package:boring_flutter_app/data/model/article_model.dart';
+import 'package:boring_flutter_app/data/model/api_result_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -18,7 +18,7 @@ class ArticleLoadingState extends ArticleState {
 
 class ArticleLoadedState extends ArticleState {
 
-  List<Article> articles;
+  List<Articles> articles;
 
   ArticleLoadedState({@required this.articles});
 
